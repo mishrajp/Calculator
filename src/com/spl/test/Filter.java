@@ -7,6 +7,11 @@ import junit.framework.*;
 public class Filter extends TestCase {
 
 	InputManager inputManager = new InputManager();
+
+	public void setUp() {
+		inputManager.load_valid_operators();
+     }
+
 	public void testOperatorsLoading() {
 		//inputManger.load_valid_operators();
 		assertTrue(inputManager.search_symbols('1'));
@@ -19,11 +24,12 @@ public class Filter extends TestCase {
 		assertEquals(inputManager.filter_input("1 + w"), "1+");
 		assertEquals(inputManager.filter_input("w ) ?"), "");
 		assertEquals(inputManager.filter_input(" = "), "");
+		assertEquals(inputManager.filter_input(" = "), "");
+		assertEquals(inputManager.filter_input(", _ "), "");
 		
+		//good examples
 		assertEquals(inputManager.filter_input(" 1 + 2 = "), "1+2");
 		assertEquals(inputManager.filter_input("22 - 12 = "), "22-12");
-		
-		
 	}
 	
 }
