@@ -2,6 +2,7 @@ package com.spl.model;
 
 public interface IModel{
 	
+	
 	public void addSymbolToStatement(String Symbol);
 
 	

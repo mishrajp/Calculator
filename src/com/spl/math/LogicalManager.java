@@ -1,11 +1,20 @@
 package com.spl.math;
 
-public class LogicalManager implements ILogicalManager{
+import com.spl.model.IModel;
+import com.spl.model.Model;
 
-	@Override
+public class LogicalManager implements ILogicalManager{
+	IModel model;
+	
+	
 	public void performOperation() {
-		// TODO Auto-generated method stub
+		this.model=Model.getInstance();
+		Parser parser=new Parser(model.getStatement());
+		
 		
 	}
+	
+	
+	
 
 }

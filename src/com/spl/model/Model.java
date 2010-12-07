@@ -1,41 +1,46 @@
 package com.spl.model;
 
 public class Model implements IModel{
-
-	@Override
-	public void addSymbolToStatement(String Symbol) {
-		// TODO Auto-generated method stub
-		
+	
+	private static IModel instance;
+	String result=new String("");
+	String statement=new String("");
+	
+	public void addSymbolToStatement(String symbol) {
+		statement=statement.concat(symbol);
 	}
 
-	@Override
+	
 	public void deleteLastSymbol() {
-		// TODO Auto-generated method stub
-		
+		statement=statement.substring(0, statement.length()-1);
 	}
 
-	@Override
+	
 	public void deleteStatement() {
-		// TODO Auto-generated method stub
-		
+		statement="";		
 	}
 
-	@Override
+	
 	public String getStatement() {
-		// TODO Auto-generated method stub
-		return null;
+		return statement;
 	}
 
-	@Override
+	
 	public void setResult(String result) {
-		// TODO Auto-generated method stub
-		
+		this.result=result;
 	}
 
-	@Override
+	
 	public void subscribe(ModelObserver modelObserver) {
-		// TODO Auto-generated method stub
 		
+	
+	}
+
+	public static IModel getInstance() {
+		if(instance==null){
+			instance = new Model();
+		}
+		return instance;
 	}
 
 }
