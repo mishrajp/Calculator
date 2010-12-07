@@ -1,5 +1,6 @@
 package com.spl.model;
 
-public class ModelObserver {
-
+public interface ModelObserver {
+	
+	public void subscribe(ModelObserver modelObserver);
 }

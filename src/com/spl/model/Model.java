@@ -1,8 +1,11 @@
 package com.spl.model;
 
-public class Model implements IModel{
+import java.util.ArrayList;
+
+public class Model implements IModel, ModelObserver{
 	
 	private static IModel instance;
+	ArrayList<ModelObserver> observers;
 	String result=new String("");
 	String statement=new String("");
 	
@@ -32,10 +35,10 @@ public class Model implements IModel{
 
 	
 	public void subscribe(ModelObserver modelObserver) {
-		
-	
+		observers.add(modelObserver);
 	}
 
+	
 	public static IModel getInstance() {
 		if(instance==null){
 			instance = new Model();

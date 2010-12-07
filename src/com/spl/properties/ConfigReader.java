@@ -1,6 +1,5 @@
 package com.spl.properties;
 
-import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class ConfigReader {
