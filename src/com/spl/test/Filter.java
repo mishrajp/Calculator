@@ -15,21 +15,23 @@ public class Filter extends TestCase {
 	public void testOperatorsLoading() {
 		//inputManger.load_valid_operators();
 		assertTrue(inputManager.search_symbols('1'));
-		assertTrue(inputManager.search_symbols('2'));
-		
+		assertTrue(inputManager.search_symbols('2'));	
 	}
+	
 	public void testFilterInput() {
 		//bad example
-		assertEquals(inputManager.filter_input("3 + 5 = "), "3+");
-		assertEquals(inputManager.filter_input("1 + w"), "1+");
-		assertEquals(inputManager.filter_input("w ) ?"), "");
-		assertEquals(inputManager.filter_input(" = "), "");
-		assertEquals(inputManager.filter_input(" = "), "");
-		assertEquals(inputManager.filter_input(", _ "), "");
+		assertEquals(inputManager.filter("3 + 5 = "), "3+");
+		assertEquals(inputManager.filter("1 + w"), "1+");
+		assertEquals(inputManager.filter("w ) ?"), "");
+		assertEquals(inputManager.filter(" = "), "");
+		assertEquals(inputManager.filter(" = "), "");
+		assertEquals(inputManager.filter(", _ "), "");
 		
 		//good examples
-		assertEquals(inputManager.filter_input(" 1 + 2 = "), "1+2");
-		assertEquals(inputManager.filter_input("22 - 12 = "), "22-12");
+		assertEquals(inputManager.filter(" 1 + 2 = "), "1+2");
+		assertEquals(inputManager.filter("22 - 12 = "), "22-12");
+		assertEquals(inputManager.filter("242 - 1x2,"), "242-12");
+		
 	}
 	
 }
