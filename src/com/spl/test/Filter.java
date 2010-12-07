@@ -1,4 +1,4 @@
-package unitTests;
+package com.spl.test;
 
 import com.spl.input.*;
 
