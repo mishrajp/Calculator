@@ -2,25 +2,28 @@ package com.spl.model;
 
 import java.util.ArrayList;
 
-public class Model implements IModel, ModelObserver{
+public class Model implements IModel{
 	
 	private static IModel instance;
-	ArrayList<ModelObserver> observers;
+	ArrayList<ModelObserver> observers=new ArrayList<ModelObserver>();
 	String result=new String("");
 	String statement=new String("");
 	
 	public void addSymbolToStatement(String symbol) {
 		statement=statement.concat(symbol);
+		notifyAllObservers();
 	}
 
 	
 	public void deleteLastSymbol() {
 		statement=statement.substring(0, statement.length()-1);
+		notifyAllObservers();
 	}
 
 	
 	public void deleteStatement() {
-		statement="";		
+		statement="";
+		notifyAllObservers();
 	}
 
 	
@@ -31,6 +34,7 @@ public class Model implements IModel, ModelObserver{
 	
 	public void setResult(String result) {
 		this.result=result;
+		notifyAllObservers();
 	}
 
 	
@@ -44,6 +48,12 @@ public class Model implements IModel, ModelObserver{
 			instance = new Model();
 		}
 		return instance;
+	}
+	
+	private void notifyAllObservers(){
+		for (ModelObserver modelObserver : observers) {
+			modelObserver.notify();
+		}
 	}
 
 }
