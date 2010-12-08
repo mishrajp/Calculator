@@ -2,5 +2,5 @@ package com.spl.model;
 
 public interface ModelObserver {
 	
-	public void subscribe(ModelObserver modelObserver);
+	public void notifyObserver(String output);
 }

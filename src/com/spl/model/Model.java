@@ -3,27 +3,27 @@ package com.spl.model;
 import java.util.ArrayList;
 
 public class Model implements IModel{
-	
 	private static IModel instance;
 	ArrayList<ModelObserver> observers=new ArrayList<ModelObserver>();
 	String result=new String("");
 	String statement=new String("");
 	
+	
 	public void addSymbolToStatement(String symbol) {
 		statement=statement.concat(symbol);
-		notifyAllObservers();
+		notifyAllObservers(STATEMENT);
 	}
 
 	
 	public void deleteLastSymbol() {
 		statement=statement.substring(0, statement.length()-1);
-		notifyAllObservers();
+		notifyAllObservers(STATEMENT);
 	}
 
 	
 	public void deleteStatement() {
 		statement="";
-		notifyAllObservers();
+		notifyAllObservers(STATEMENT);
 	}
 
 	
@@ -34,7 +34,7 @@ public class Model implements IModel{
 	
 	public void setResult(String result) {
 		this.result=result;
-		notifyAllObservers();
+		notifyAllObservers(RESULT);
 	}
 
 	
@@ -50,9 +50,9 @@ public class Model implements IModel{
 		return instance;
 	}
 	
-	private void notifyAllObservers(){
+	private void notifyAllObservers(String output){
 		for (ModelObserver modelObserver : observers) {
-			modelObserver.notify();
+			modelObserver.notifyObserver(output);
 		}
 	}
 
