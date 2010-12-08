@@ -25,7 +25,7 @@ public class Calculator extends JFrame implements ModelObserver {
 	private int gridOperatorsX = 3;
 	private int gridOperatorsY = 4;
 	
-	private JPanel jplGeneral, jplOutput, jplButtons, jplNumbers, jplOperators, jplMessages;
+	private JPanel jplGeneral, jplOutput, jplButtons, jplNumbers, jplOperators;
 	private JTextField jtfOutput1;
 	private JLabel jlbMessages;
 	
@@ -36,24 +36,25 @@ public class Calculator extends JFrame implements ModelObserver {
 	
 
 	public Calculator() {
-		// 0. Model instance
+		// 1. Subscribes to the model (model-observer pattern)
 		model = Model.getInstance();
 		model.subscribe(this);
 		
+		// 2. Connects with the input manager
 		inputMgr = new InputManager();
 		inputMgr.load_valid_operators();
 		
-		// 1. Creates and sets up the window
+		// 3. Creates and sets up the window
         setTitle("SPL Calculator");
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setLocation(screenSize.width/4, screenSize.height/4);
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		// 2. Sets up the content pane
+		// 4. Sets up the content pane
 		addComponents();
 		
-		// 3. Displays the window
+		// 5. Displays the window
         pack();
         setVisible(true);
 	}
@@ -66,8 +67,6 @@ public class Calculator extends JFrame implements ModelObserver {
 		jplGeneral.setLayout(new BoxLayout(jplGeneral, BoxLayout.Y_AXIS));
 		jplButtons = new JPanel();
 		jplButtons.setLayout(new BoxLayout(jplButtons, BoxLayout.X_AXIS));
-		jplMessages = new JPanel();
-		jplMessages.setLayout(new BoxLayout(jplGeneral, BoxLayout.X_AXIS));
 		
 		// 2. Sets the theme of the calculator
 		setTheme();
@@ -76,12 +75,10 @@ public class Calculator extends JFrame implements ModelObserver {
 		addOutputPad();
 		addNumericPad();
 		addOperatorsPad();
-		addMessagesPad();
 		
 		// 4. Adds the structure to the main frame
 		jplGeneral.add(jplOutput);
 		jplGeneral.add(jplButtons);
-		jplGeneral.add(jlbMessages);
 		getContentPane().add(jplGeneral);
 	}
 
@@ -138,11 +135,6 @@ public class Calculator extends JFrame implements ModelObserver {
 		
 		
 		jplButtons.add(jplOperators);
-	}
-	
-	private void addMessagesPad() {
-		jlbMessages = new JLabel("Output messages.");
-		jlbMessages.setHorizontalTextPosition(JLabel.LEFT);
 	}
 	
     public static void main(String[] args) {
