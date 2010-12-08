@@ -30,6 +30,10 @@ public class Model implements IModel{
 	public String getStatement() {
 		return statement;
 	}
+	
+	public String getResult() {
+		return result;
+	}
 
 	
 	public void setResult(String result) {

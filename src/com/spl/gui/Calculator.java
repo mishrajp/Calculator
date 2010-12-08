@@ -11,7 +11,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-public class Calculator extends JFrame {
+import com.spl.model.IModel;
+import com.spl.model.Model;
+import com.spl.model.ModelObserver;
+
+public class Calculator extends JFrame implements ModelObserver {
 		
 	private int gridNumbersX = 3;
 	private int gridNumbersY = 4;
@@ -21,8 +25,14 @@ public class Calculator extends JFrame {
 	private JPanel jplGeneral, jplOutput, jplButtons, jplNumbers, jplOperators, jplMessages;
 	private JTextField jtfOutput1;
 	private JLabel jlbMessages;
+	
+	private IModel model;
 
 	public Calculator() {
+		// 0. Model instance
+		model = Model.getInstance();
+		model.subscribe(this);
+		
 		// 1. Creates and sets up the window
         setTitle("SPL Calculator");
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -114,6 +124,19 @@ public class Calculator extends JFrame {
 	}
 	
     public static void main(String[] args) {
-    	JFrame jfDummyCalculator = new Calculator();
-    } 
+    	Calculator jfDummyCalculator = new Calculator();
+    	jfDummyCalculator.model.setResult("Adi—s");
+    }
+
+	@Override
+	public void notifyObserver(String output) {
+		// TODO Auto-generated method stub
+		if (output.equals(Model.RESULT)) {
+			jtfOutput1.setText(model.getResult());
+		}
+		else {
+			jtfOutput1.setText(model.getStatement());
+		}
+		
+	} 
 }
