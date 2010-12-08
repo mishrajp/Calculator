@@ -3,6 +3,8 @@ package com.spl.gui;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -11,6 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import com.spl.input.InputManager;
 import com.spl.model.IModel;
 import com.spl.model.Model;
 import com.spl.model.ModelObserver;
@@ -26,12 +29,19 @@ public class Calculator extends JFrame implements ModelObserver {
 	private JTextField jtfOutput1;
 	private JLabel jlbMessages;
 	
+	private JButton jbtPrueba;
+	
 	private IModel model;
+	private InputManager inputMgr;
+	
 
 	public Calculator() {
 		// 0. Model instance
 		model = Model.getInstance();
 		model.subscribe(this);
+		
+		inputMgr = new InputManager();
+		inputMgr.load_valid_operators();
 		
 		// 1. Creates and sets up the window
         setTitle("SPL Calculator");
@@ -113,6 +123,18 @@ public class Calculator extends JFrame implements ModelObserver {
 		jplOperators.add(new JButton("="));
 		jplOperators.add(new JButton("+"));
 		jplOperators.add(new JButton("-"));
+		
+
+		
+		jbtPrueba = new JButton("9");
+		jbtPrueba.addActionListener(
+			    new ActionListener() {
+			        public void actionPerformed(ActionEvent e) {
+			            inputMgr.filter(jbtPrueba.getText());  // code to execute when button is pressed
+			        }
+			    }
+			);
+		jplOperators.add(jbtPrueba);
 		
 		
 		jplButtons.add(jplOperators);
