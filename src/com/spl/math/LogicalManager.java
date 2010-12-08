@@ -11,7 +11,6 @@ public class LogicalManager implements ILogicalManager{
 		this.model=Model.getInstance();
 		Parser parser=new Parser(model.getStatement());
 		
-		
 	}
 	
 	
