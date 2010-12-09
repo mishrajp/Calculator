@@ -49,26 +49,6 @@ public class Filter extends TestCase {
 		inputManager.addSymbol('0');
 		inputManager.addSymbol('=');
 		inputManager.clearall();	
-		
-
 	}
-/*	
-	public void testFilterInput() {
-		//bad example
-		//assertEquals(inputManager.filter("3 + 5 = "), "3+");
-		assertEquals(inputManager.filter("1 + w"), "1+");
-		assertEquals(inputManager.filter("w & ?"), "");
-		assertEquals(inputManager.filter(" = "), "");
-		assertEquals(inputManager.filter(" = "), "");
-		assertEquals(inputManager.filter(", _ "), "");
-		
-		//good examples
-		assertEquals(inputManager.filter(" 1 + 2 = "), "1+2");
-		assertEquals(inputManager.filter("22 - 12 = "), "22-12");
-		assertEquals(inputManager.filter("242 - 1x2,"), "242-12");
-		//assertEquals(inputManager.filter("sr(4) + 3"), "sr(4)+3");
-		
-	}
-*/
 	
 }

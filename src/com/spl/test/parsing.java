@@ -2,6 +2,7 @@ package com.spl.test;
 
 import junit.framework.*;
 
+import com.spl.math.LogicalManager;
 import com.spl.math.Parser;
 
 
@@ -37,5 +38,12 @@ public class parsing extends TestCase {
 		assertTrue(parser.isNumber("223"));
 		assertTrue(parser.isNumber("123.67"));
 		assertFalse(parser.isNumber("1a23.67"));
+	}
+	
+	public void testTruncateNumber() {
+		LogicalManager logical = new LogicalManager();
+		assertEquals(logical.truncate_number("120.355"), "120");
+		assertEquals(logical.truncate_number("12"), "12");
+		assertEquals(logical.truncate_number("12035.5"), "12035");
 	}
 }
