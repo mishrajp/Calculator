@@ -73,7 +73,7 @@ public class InputManager {
 	
 	public void clearall() {
 		Model.getInstance().deleteStatement();
-		//Model.getInstance().d
+		Model.getInstance().deleteResult();
 	}
 	
 	public void clear() {

@@ -14,6 +14,8 @@ public interface IModel{
 
 	public void setResult(String result);
 	
+	public void deleteResult();
+	
 	public String getResult();
 	
 	public void subscribe(ModelObserver modelObserver);

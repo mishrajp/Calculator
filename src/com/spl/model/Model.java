@@ -40,6 +40,11 @@ public class Model implements IModel{
 		this.result=result;
 		notifyAllObservers(RESULT);
 	}
+	
+	public void deleteResult() {
+		result="";
+		notifyAllObservers(RESULT);
+	}
 
 	
 	public void subscribe(ModelObserver modelObserver) {

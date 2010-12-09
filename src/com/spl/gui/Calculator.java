@@ -4,9 +4,12 @@ import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.KeyEventDispatcher;
+import java.awt.KeyboardFocusManager;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
@@ -24,6 +27,13 @@ import com.spl.model.ModelObserver;
 import com.spl.properties.ConfigReader;
 
 public class Calculator implements ModelObserver {
+	
+	private class MyDispatcher implements KeyEventDispatcher { 
+	    @Override 
+	    public boolean dispatchKeyEvent(KeyEvent e) { 
+	    	return false;
+	    } 
+	} 
 		
 	private final int gridNumbersX = 3;
 	private final int gridNumbersY = 4;
@@ -32,16 +42,20 @@ public class Calculator implements ModelObserver {
 	
 	private final String THEME_PROPERTIES_FILE = "theme";
 	
-	private static Object[] UNDO = {"UNDO","u"};
-	private static Object[] CLEAR = {"CLEAR","c"};
-	private static Object[] EQUAL = {"EQUAL", "="};
+	private static final String UNDO_BUTTON = "UNDO";
+	private static final String CLEAR_BUTTON = "CLEAR";
+	private static final String EQUAL_BUTTON = "=";
+	private static final char DEL_CHAR = '\b';
+	private static final char ENTER_CHAR = '\n';
+	private static final char EQUAL_CHAR = '=';
 	
-	private JPanel jplOutput, jplButtons, jplNumbers, jplOperators;
+	private JPanel jplOutput, jplButtons;
 	private JTextField jtfOutput1, jtfOutput2;
 		
 	private IModel model;
 	private InputManager inputMgr;
 	
+	private JFrame frame;
 	private Theme theme;
 
 	public Calculator() {
@@ -57,7 +71,7 @@ public class Calculator implements ModelObserver {
 		loadThemeConfiguration();
 		
 		// 4. Creates and sets up the window
-        JFrame frame = new JFrame("SPL Calculator");
+        frame = new JFrame("SPL Calculator");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         frame.setLocation(screenSize.width/4, screenSize.height/4);
@@ -112,18 +126,33 @@ System.out.println("Se carg— un nuevo them con atributos: " + inputMethod + " " 
 		// 1.- COMMONALITY: output display -> 1 row
 		jtfOutput1 = new JTextField("0");
 		jtfOutput1.setHorizontalAlignment(JTextField.RIGHT);
+		jtfOutput1.setEditable(false);
 		jplOutput.add(jtfOutput1);
 		
 		// 2.- VARIABILITY POINT: output display -> 2 rows
 		if (theme.getOutputMode().equals(theme.OM_TEXT_2ROWS)) {
 			jtfOutput2 = new JTextField();
 			jtfOutput2.setHorizontalAlignment(JTextField.RIGHT);
+			jtfOutput2.setEditable(false);
 			jplOutput.add(jtfOutput2);
 		}
+		
+		// 3.- Sets the key listener of the calculator
+		KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager(); 
+	    manager.addKeyEventDispatcher(new MyDispatcher() {
+		    public boolean dispatchKeyEvent(KeyEvent e) { 
+		    	if (e.getID() == KeyEvent.KEY_PRESSED) { 
+			    	char keyCode = e.getKeyChar();
+					keyStroke(keyCode); 
+		        }
+		    	
+		        return false; 
+		    }
+	    }); 	
 	}
 
 	private void addNumericPad() {
-		jplNumbers = new JPanel();
+		JPanel jplNumbers = new JPanel();
 		jplNumbers.setLayout(new GridLayout(gridNumbersY,gridNumbersX));
 		ArrayList<String> arrayOfButtonTags = new ArrayList<String>(); 
 		
@@ -158,15 +187,15 @@ System.out.println("Se carg— un nuevo them con atributos: " + inputMethod + " " 
 	}
 	
 	private void addOperatorsPad() {
-		jplOperators = new JPanel();
+		JPanel jplOperators = new JPanel();
 		jplOperators.setLayout(new GridLayout(gridOperatorsY, gridOperatorsX));
 		ArrayList<String> arrayOfButtonTags = new ArrayList<String>(); 
 		
 		// 1.- Fills the array of button tags				
 		// 1.1.- COMMONALIY: buttons UNDO, CLEAR and =
-		arrayOfButtonTags.add((String)UNDO[0]);
-		arrayOfButtonTags.add((String)CLEAR[0]);
-		arrayOfButtonTags.add((String)EQUAL[1]);
+		arrayOfButtonTags.add(UNDO_BUTTON);
+		arrayOfButtonTags.add(CLEAR_BUTTON);
+		arrayOfButtonTags.add(EQUAL_BUTTON);
 			
 		// 1.2.- VARIABILITY POINT: operators supported by the calculator
 		for (int i = 0; i < inputMgr.symbols.length; i++) {
@@ -197,20 +226,30 @@ System.out.println("Se carg— un nuevo them con atributos: " + inputMethod + " " 
 	private void buttonPressed(String buttonLabel) {
 		char c;
 				
-		if (buttonLabel.equals((String)UNDO[0])) {
-			c = ((String)UNDO[1]).charAt(0);
+		if (buttonLabel.equals(UNDO_BUTTON)) {
 			inputMgr.clear();
 		}
-		else if (buttonLabel.equals((String)CLEAR[0])) {
-			c = ((String)CLEAR[1]).charAt(0);
+		else if (buttonLabel.equals(CLEAR_BUTTON) ){
 			inputMgr.clearall();
+			jtfOutput1.setText("0");
 		}
 		else {
 			c = buttonLabel.charAt(0);
 			inputMgr.addSymbol(c);
 		}
-		
-		
+	}
+	
+	private void keyStroke(char k) {
+System.out.print(k);
+		if (k == DEL_CHAR) {
+			inputMgr.clear();
+		}
+		else if (k == ENTER_CHAR) {
+			inputMgr.addSymbol(EQUAL_CHAR);
+		}
+		else {
+			inputMgr.addSymbol(k);
+		}
 	}
 	
 	@Override
