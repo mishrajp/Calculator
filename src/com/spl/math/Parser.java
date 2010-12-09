@@ -110,6 +110,10 @@ public class Parser {
 						final_expression += "Math.exp(" + tokens[i+1] + ")";
 						marker[i] = true;
 						marker[i+1] = true;						
+					} else if(tokens[i].equals("s")) {
+						final_expression += "Math.sqrt(" + tokens[i+1] + ")";
+						marker[i] = true;
+						marker[i+1] = true;						
 					} else if(tokens[i].equals("~")) {
 						final_expression += "Math.abs(";
 						if(tokens[i+1].equals("-") ||tokens[i+1].equals("+")) {

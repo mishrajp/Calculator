@@ -27,6 +27,8 @@ public class parsing extends TestCase {
 		//this is bug
 		parser.converter("18*(3*55)/12*~-9");
 		parser.converter("((3/55+2)/2)");
+		parser.converter("5+s16-3");
+		
 		//there is a problem in division when inside parenthesis 
 	}
 	
