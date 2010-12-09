@@ -42,9 +42,15 @@ public class Filter extends TestCase {
 		inputManager.addSymbol('^');
 		inputManager.addSymbol('5');
 		inputManager.addSymbol('=');
+		inputManager.clearall();	
 		
-		//assertEquals(Model.getInstance().getStatement(), "1+5");
-		inputManager.clearall();		
+		inputManager.addSymbol('8');
+		inputManager.addSymbol('/');
+		inputManager.addSymbol('0');
+		inputManager.addSymbol('=');
+		inputManager.clearall();	
+		
+
 	}
 /*	
 	public void testFilterInput() {
