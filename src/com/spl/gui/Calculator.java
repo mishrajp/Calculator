@@ -1,7 +1,7 @@
 package com.spl.gui;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
@@ -22,24 +21,28 @@ import com.spl.input.InputManager;
 import com.spl.model.IModel;
 import com.spl.model.Model;
 import com.spl.model.ModelObserver;
+import com.spl.properties.ConfigReader;
 
-public class Calculator extends JFrame implements ModelObserver {
+public class Calculator implements ModelObserver {
 		
-	private int gridNumbersX = 3;
-	private int gridNumbersY = 4;
-	private int gridOperatorsX = 3;
-	private int gridOperatorsY = 4;
+	private final int gridNumbersX = 3;
+	private final int gridNumbersY = 4;
+	private final int gridOperatorsX = 3;
+	private final int gridOperatorsY = 0;
+	
+	private final String THEME_PROPERTIES_FILE = "theme";
 	
 	private static Object[] UNDO = {"UNDO","u"};
 	private static Object[] CLEAR = {"CLEAR","c"};
 	private static Object[] EQUAL = {"EQUAL", "="};
 	
-	private JPanel jplGeneral, jplOutput, jplButtons, jplNumbers, jplOperators;
-	private JTextField jtfOutput1;
+	private JPanel jplOutput, jplButtons, jplNumbers, jplOperators;
+	private JTextField jtfOutput1, jtfOutput2;
 		
 	private IModel model;
 	private InputManager inputMgr;
 	
+	private Theme theme;
 
 	public Calculator() {
 		// 1. Subscribes to the model (model-observer pattern)
@@ -50,27 +53,38 @@ public class Calculator extends JFrame implements ModelObserver {
 		inputMgr = new InputManager();
 		inputMgr.load_valid_operators();
 		
-		// 3. Creates and sets up the window
-        setTitle("SPL Calculator");
+		// 3. Loads the theme configuration
+		loadThemeConfiguration();
+		
+		// 4. Creates and sets up the window
+        JFrame frame = new JFrame("SPL Calculator");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        setLocation(screenSize.width/4, screenSize.height/4);
-        setResizable(false);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLocation(screenSize.width/4, screenSize.height/4);
+        frame.setResizable(false);
 		
-		// 4. Sets up the content pane
-		addComponents();
+		// 5. Sets up the content pane
+        addComponents(frame.getContentPane());
 		
-		// 5. Displays the window
-        pack();
-        setVisible(true);
+		// 6. Displays the window
+        frame.pack();
+        frame.setVisible(true);
 	}
 	
-	public void addComponents() {
+	public void loadThemeConfiguration() {
+		ConfigReader configReader = new ConfigReader(THEME_PROPERTIES_FILE);
+		String inputMethod = configReader.getProperty("input_method");
+		String outputMode = configReader.getProperty("output_mode");
+		String bgImage = configReader.getProperty("bg_image");
+		
+		theme = new Theme(inputMethod, outputMode, bgImage);
+System.out.println("Se carg— un nuevo them con atributos: " + inputMethod + " " + outputMode + " " + bgImage);		
+	}
+	
+	public void addComponents(Container pane) {
 		// 1. Creates the common structure of a generic calculator
-		jplGeneral = new JPanel();		
-		jplGeneral.setLayout(new BoxLayout(jplGeneral, BoxLayout.Y_AXIS));
 		jplOutput = new JPanel();
-		jplGeneral.setLayout(new BoxLayout(jplGeneral, BoxLayout.Y_AXIS));
+		jplOutput.setLayout(new BoxLayout(jplOutput, BoxLayout.Y_AXIS));
 		jplButtons = new JPanel();
 		jplButtons.setLayout(new BoxLayout(jplButtons, BoxLayout.X_AXIS));
 		
@@ -83,9 +97,8 @@ public class Calculator extends JFrame implements ModelObserver {
 		addOperatorsPad();
 		
 		// 4. Adds the structure to the main frame
-		jplGeneral.add(jplOutput);
-		jplGeneral.add(jplButtons);
-		getContentPane().add(jplGeneral);
+		pane.add(jplOutput, BorderLayout.PAGE_START);
+		pane.add(jplButtons, BorderLayout.PAGE_END);
 	}
 
 	private void setTheme() {
@@ -95,18 +108,23 @@ public class Calculator extends JFrame implements ModelObserver {
 		 */
 	}
 	
-	private void addOutputPad() {
-		/* TEST OUTPUT
-		 * Variability Point: Output(s) should be the ones on the configuration files only
-		 */
+	private void addOutputPad() {		
+		// 1.- COMMONALITY: output display -> 1 row
 		jtfOutput1 = new JTextField("0");
+		jtfOutput1.setHorizontalAlignment(JTextField.RIGHT);
 		jplOutput.add(jtfOutput1);
-
+		
+		// 2.- VARIABILITY POINT: output display -> 2 rows
+		if (theme.getOutputMode().equals(theme.OM_TEXT_2ROWS)) {
+			jtfOutput2 = new JTextField();
+			jtfOutput2.setHorizontalAlignment(JTextField.RIGHT);
+			jplOutput.add(jtfOutput2);
+		}
 	}
 
 	private void addNumericPad() {
 		jplNumbers = new JPanel();
-		jplNumbers.setLayout(new GridLayout(gridNumbersY, gridNumbersX));
+		jplNumbers.setLayout(new GridLayout(gridNumbersY,gridNumbersX));
 		ArrayList<String> arrayOfButtonTags = new ArrayList<String>(); 
 		
 		// 1.- Fills the array of button tags				
@@ -114,7 +132,7 @@ public class Calculator extends JFrame implements ModelObserver {
 		for (int i = 9; i >= 0; i --) {
 			arrayOfButtonTags.add(String.valueOf(i));
 		}
-		// 1.2 - VARIABILITY POINT, punctuation: Extra symbols (if any, ie '.')
+		// 1.2.- VARIABILITY POINT, punctuation: Extra symbols (if any, ie '.')
 		for (int i = 0; i < inputMgr.symbols.length; i++) {
 			if (inputMgr.symbols[i] == '.') {
 				arrayOfButtonTags.add(".");
@@ -181,24 +199,32 @@ public class Calculator extends JFrame implements ModelObserver {
 				
 		if (buttonLabel.equals((String)UNDO[0])) {
 			c = ((String)UNDO[1]).charAt(0);
+			inputMgr.clear();
 		}
 		else if (buttonLabel.equals((String)CLEAR[0])) {
 			c = ((String)CLEAR[1]).charAt(0);
+			inputMgr.clearall();
 		}
 		else {
 			c = buttonLabel.charAt(0);
+			inputMgr.addSymbol(c);
 		}
 		
-		inputMgr.addSymbol(c);
+		
 	}
 	
 	@Override
 	public void notifyObserver(String output) {
-		// TODO Auto-generated method stub
 		if (output.equals(Model.RESULT)) {
-			jtfOutput1.setText(model.getResult());
+			if (theme.getOutputMode().equals(theme.OM_TEXT_1ROW)) {
+				jtfOutput1.setText(model.getResult());
+			}
+			else if (theme.getOutputMode().equals(theme.OM_TEXT_2ROWS)) {
+				jtfOutput2.setText(model.getResult());
+			}
+			
 		}
-		else {
+		else if (output.equals(Model.STATEMENT)){
 			jtfOutput1.setText(model.getStatement());
 		}
 		
@@ -223,7 +249,7 @@ public class Calculator extends JFrame implements ModelObserver {
 			e.printStackTrace();
 		}
 		
-		// 2.- Instantiates the calculator
+		// 2.- Instances the calculator
     	Calculator jfDummyCalculator = new Calculator();
     }
 
