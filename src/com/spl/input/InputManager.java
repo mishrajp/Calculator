@@ -62,8 +62,9 @@ public class InputManager {
 		
 		return statement; 
 	}
-	
+
 	public void addSymbol(char in_chars) {
+System.out.print(in_chars);		
 		Model.getInstance().addSymbolToStatement(Character.toString(in_chars));
 	}
 	
