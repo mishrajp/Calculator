@@ -44,7 +44,7 @@ public class InputManager {
 			}
 		}
 	}
-	
+/*	
 	public String filter(String input) {
 		char [] in_chars = input.toCharArray();
 		String statement = "";
@@ -62,10 +62,16 @@ public class InputManager {
 		
 		return statement; 
 	}
-
-	public void addSymbol(char in_chars) {
-System.out.print(in_chars);		
-		Model.getInstance().addSymbolToStatement(Character.toString(in_chars));
+*/
+	public void addSymbol(char in_char) {
+//System.out.print(in_char);
+		if(in_char == '=') {
+			//call performOperations
+			LogicalManager logicalManager = new LogicalManager();
+			logicalManager.performOperation();
+		} else if(search_symbols(in_char)) {
+			Model.getInstance().addSymbolToStatement(Character.toString(in_char));			
+		}else {}
 	}
 	
 	public void clearall() {

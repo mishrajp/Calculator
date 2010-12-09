@@ -1,6 +1,7 @@
 package com.spl.test;
 
 import com.spl.input.*;
+import com.spl.model.Model;
 
 import junit.framework.*;
 
@@ -17,7 +18,29 @@ public class Filter extends TestCase {
 		assertTrue(inputManager.search_symbols('1'));
 		assertTrue(inputManager.search_symbols('2'));	
 	}
-	
+	public void testAddSymbol(){
+		//good example
+		inputManager.addSymbol('1');
+		inputManager.addSymbol('6');
+		inputManager.addSymbol('+');
+		inputManager.addSymbol('2');
+		assertEquals(Model.getInstance().getStatement(), "16+2");
+		inputManager.clear();
+		assertEquals(Model.getInstance().getStatement(), "16+");
+		inputManager.addSymbol('4');
+		inputManager.addSymbol('=');
+		assertEquals(Model.getInstance().getStatement(), "16+4");
+		inputManager.clearall();
+		
+		//example with wrong characters
+		inputManager.addSymbol('1');
+		inputManager.addSymbol('+');
+		inputManager.addSymbol('w');
+		inputManager.addSymbol('5');
+		assertEquals(Model.getInstance().getStatement(), "1+5");
+		inputManager.clearall();		
+	}
+/*	
 	public void testFilterInput() {
 		//bad example
 		//assertEquals(inputManager.filter("3 + 5 = "), "3+");
@@ -34,7 +57,7 @@ public class Filter extends TestCase {
 		//assertEquals(inputManager.filter("sr(4) + 3"), "sr(4)+3");
 		
 	}
-	
+*/
 	public void testConverter() {
 		inputManager.converter("3+3^2");
 		inputManager.converter("3+55-14*2^2");
@@ -49,8 +72,9 @@ public class Filter extends TestCase {
 		//this is bug
 		inputManager.converter("18*(3*55)/12*~-9");
 		inputManager.converter("((3/55+2)/2)");
-		//there is a problem in division when inside parenethsis 
+		//there is a problem in division when inside parenthesis 
 	}
+	
 	public void testIsNumber(){
 		assertTrue(inputManager.isNumber("123"));
 		assertTrue(inputManager.isNumber("223"));
