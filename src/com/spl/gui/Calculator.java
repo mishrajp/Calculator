@@ -186,7 +186,6 @@ public class Calculator implements ModelObserver {
 		//		actionPerformed method
 		for (final String s : arrayOfButtonTags) {
 			JButton jbtButton = new JButton(s);
-			jbtButton.setForeground(Color.red);
 			jbtButton.addActionListener(
 					new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
