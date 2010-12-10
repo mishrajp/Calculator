@@ -78,7 +78,9 @@ public class Parser {
 						}
 					}
 				} else {				
-					if(tokens[i].equals("^")) {
+					if(false){
+						//do nothing
+					} else if(tokens[i].equals("^")) {
 						final_expression += "Math.pow(" + tokens[i-1] + "," + tokens[i+1] + ")";
 						marker[i-1] = true;
 						marker[i] = true;
@@ -103,8 +105,7 @@ public class Parser {
 							final_expression += tokens[i+1] + ")";
 							marker[i+1] = true;	
 							marker[i] = true;
-						}
-									
+						}		
 					}
 				}
 			}
@@ -112,7 +113,7 @@ public class Parser {
 		// if the last element is not added
 		if(marker[i - 1] == false)
 			final_expression += tokens[i - 1];
-System.out.println("final: " + final_expression);
+//System.out.println("final: " + final_expression);
 		return final_expression;
 	}
 	
@@ -126,19 +127,6 @@ System.out.println("final: " + final_expression);
 			}
 		}
 		return exists;
-	}
-	
-	//ON = operator number	
-	public boolean isON(String ops) {
-		String operators []= {"e", "~"};
-		boolean exists = false;
-		for(int i = 0; i < operators.length; i++) {
-			if(operators[i].equals(ops)) {
-				exists = true;
-				break;
-			}
-		}
-		return exists;		
 	}
 	
 	public boolean isNumber(String exp) {
