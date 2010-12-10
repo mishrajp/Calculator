@@ -1,6 +1,7 @@
 package com.spl.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -19,6 +20,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.plaf.ColorUIResource;
 
 import com.spl.input.InputManager;
 import com.spl.model.IModel;
@@ -90,9 +92,14 @@ public class Calculator implements ModelObserver {
 		String inputMethod = configReader.getProperty("input_method");
 		String outputMode = configReader.getProperty("output_mode");
 		String bgImage = configReader.getProperty("bg_image");
+		String bgColor = configReader.getProperty("bg_color");
+		String fgBut = configReader.getProperty("fg_button");
+		String bgDis = configReader.getProperty("bg_display");
+		String fgDis = configReader.getProperty("fg_display");
 		
-		theme = new Theme(inputMethod, outputMode, bgImage);
-System.out.println("Se carg— un nuevo them con atributos: " + inputMethod + " " + outputMode + " " + bgImage);		
+		
+		theme = new Theme(inputMethod, outputMode, bgImage,
+				bgColor, fgBut, bgDis, fgDis);
 	}
 	
 	public void addComponents(Container pane) {
@@ -104,7 +111,7 @@ System.out.println("Se carg— un nuevo them con atributos: " + inputMethod + " " 
 		
 		// 2. Sets the theme of the calculator
 		setTheme();
-
+		
 		// 3. Creates the variable content of the pads
 		addOutputPad();
 		addNumericPad();
@@ -116,10 +123,17 @@ System.out.println("Se carg— un nuevo them con atributos: " + inputMethod + " " 
 	}
 
 	private void setTheme() {
-		/* TEST Theme
-		 * Variability Point: Theme configuration parameters
-		 * should be the ones on the configuration files only
-		 */
+		// VARIABILITIES
+		// 1.- BACKGROUND IMAGE
+
+		// 2.- BG COLOR
+		UIManager.put("Panel.background",new ColorUIResource(Integer.parseInt(theme.getBgColor(), 16)));
+		// 3.- BUTTON FOREGROUND
+		UIManager.put("Button.foreground",new ColorUIResource(Integer.parseInt(theme.getFgButton(), 16)));
+		// 4.- DISPLAY BACKGROUND
+		UIManager.put("TextField.background",new ColorUIResource(Integer.parseInt(theme.getBgDisplay(), 16)));
+		// 5.- DISPLAY FOREGROUND
+		UIManager.put("TextField.foreground",new ColorUIResource(Integer.parseInt(theme.getFgDisplay(), 16)));
 	}
 	
 	private void addOutputPad() {		
@@ -172,6 +186,7 @@ System.out.println("Se carg— un nuevo them con atributos: " + inputMethod + " " 
 		//		actionPerformed method
 		for (final String s : arrayOfButtonTags) {
 			JButton jbtButton = new JButton(s);
+			jbtButton.setForeground(Color.red);
 			jbtButton.addActionListener(
 					new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
