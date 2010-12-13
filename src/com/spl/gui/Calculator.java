@@ -1,8 +1,5 @@
 package com.spl.gui;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.KeyEventDispatcher;
@@ -13,10 +10,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -37,7 +32,7 @@ public class Calculator implements ModelObserver {
 	    } 
 	} 
 		
-	private final boolean FLAG_CHILDREN = true;
+	private final boolean FLAG_CHILDREN = false;
 	
 	private final int gridNumbersX = 3;
 	private final int gridNumbersY = 4;
@@ -54,7 +49,7 @@ public class Calculator implements ModelObserver {
 	private static final char ENTER_CHAR = '\n';
 	private static final char EQUAL_CHAR = '=';
 	
-	private ImagePanel pane;
+	private ImagePanel pane, jplNumbers, jplOperators;
 	private JTextField jtfOutput1, jtfOutput2;
 		
 	private IModel model;
@@ -80,12 +75,6 @@ public class Calculator implements ModelObserver {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         frame.setLocation(screenSize.width/4, screenSize.height/4);
-        if (FLAG_CHILDREN) {
-        	frame.setSize(410, 475);
-        }
-        else {
-        	frame.setSize(315,300);
-        }
         frame.setResizable(false);
 		
 		// 5. Sets up the content pane
@@ -110,24 +99,39 @@ public class Calculator implements ModelObserver {
 				bgColor, fgBut, bgDis, fgDis);
 	}
 	
-	public void addComponents() {
-		// 1. Creates the content pane of a generic calculator
-		if (FLAG_CHILDREN) {
-			pane = new ImagePanel(theme.getBgImage());
-		}
-		else {
-			pane = new ImagePanel(null);
-		}
-		pane.setLayout(null);
-		
-		// 2. Sets the theme of the calculator
+	public void addComponents() {		
+		// 1. Sets the theme of the calculator
 		setTheme();
 		
-		// 3. Creates the variable content of the pads
+		// 2. Creates the variable content of the pads
 		addOutputPad();
 		addNumericPad();
 		addOperatorsPad();
 		
+		// 3. Place components attending to their bounds
+		if (FLAG_CHILDREN) {
+			frame.setSize(410, 475);
+			pane = new ImagePanel(theme.getBgImage());
+			jtfOutput1.setBounds(50,95,305,25);
+			jplNumbers.setBounds(50,150,150,150);
+			jplOperators.setBounds(205,150,150,175);
+		}
+		else {
+			frame.setSize(315,300);
+			pane = new ImagePanel(null);
+			jtfOutput1.setBounds(5,5,305,25);
+			if (theme.getOutputMode().equals(theme.OM_TEXT_2ROWS)) {
+				jtfOutput2.setBounds(5,35,305,25);
+				pane.add(jtfOutput2);
+			}
+			jplNumbers.setBounds(5,70,150,150);
+			jplOperators.setBounds(160,70,150,175);
+		}
+		pane.add(jtfOutput1);
+		pane.add(jplNumbers);
+		pane.add(jplOperators);
+		pane.setLayout(null);
+
 		// 4. Adds the structure to the main frame
 		frame.add(pane);
 	}
@@ -149,21 +153,12 @@ public class Calculator implements ModelObserver {
 		jtfOutput1 = new JTextField("0");
 		jtfOutput1.setHorizontalAlignment(JTextField.RIGHT);
 		jtfOutput1.setEditable(false);
-		if (FLAG_CHILDREN) {
-			jtfOutput1.setBounds(50,95,305,25);
-		}
-		else {
-			jtfOutput1.setBounds(5,5,305,25);
-		}
-		pane.add(jtfOutput1);
 		
 		// 2.- VARIABILITY POINT: output display -> 2 rows
 		if (theme.getOutputMode().equals(theme.OM_TEXT_2ROWS)) {
 			jtfOutput2 = new JTextField();
 			jtfOutput2.setHorizontalAlignment(JTextField.RIGHT);
 			jtfOutput2.setEditable(false);
-			jtfOutput2.setBounds(5,35,305,25);
-			pane.add(jtfOutput2);
 		}
 		
 		// 3.- Sets the key listener of the calculator
@@ -181,7 +176,7 @@ public class Calculator implements ModelObserver {
 	}
 
 	private void addNumericPad() {
-		ImagePanel jplNumbers = new ImagePanel(TRANSPARENT_BG);
+		jplNumbers = new ImagePanel(TRANSPARENT_BG);
 		jplNumbers.setLayout(new GridLayout(gridNumbersY,gridNumbersX));
 		ArrayList<String> arrayOfButtonTags = new ArrayList<String>(); 
 		
@@ -210,19 +205,10 @@ public class Calculator implements ModelObserver {
 			);
 			jplNumbers.add(jbtButton);
 		}
-		
-		// 3.- Adds the numbers pad to the general button pad of the calculator
-		if (FLAG_CHILDREN) {
-			jplNumbers.setBounds(50,150,150,150);
-		}
-		else {
-			jplNumbers.setBounds(5,70,150,150);
-		}
-		pane.add(jplNumbers);
 	}
 	
 	private void addOperatorsPad() {
-		ImagePanel jplOperators = new ImagePanel(TRANSPARENT_BG);
+		jplOperators = new ImagePanel(TRANSPARENT_BG);
 		jplOperators.setLayout(new GridLayout(gridOperatorsY, gridOperatorsX));
 		ArrayList<String> arrayOfButtonTags = new ArrayList<String>(); 
 		
@@ -253,15 +239,6 @@ public class Calculator implements ModelObserver {
 			);
 			jplOperators.add(jbtButton);
 		}
-		
-		// 3.- Adds the operators pad to the general button pad of the calculator
-		if (FLAG_CHILDREN) {
-			jplOperators.setBounds(205,150,150,175);
-		}
-		else {
-			jplOperators.setBounds(160,70,150,175);
-		}
-		pane.add(jplOperators);
 	}
 	
 	private void buttonPressed(String buttonLabel) {
