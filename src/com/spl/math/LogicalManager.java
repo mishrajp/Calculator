@@ -14,6 +14,11 @@ public class LogicalManager implements ILogicalManager{
 	String data_type;
 	public void performOperation() {
 		this.model=Model.getInstance();
+		//if the user presses = and there is nothing in the statement - ignore the process
+		if(model.getStatement().equals("")) {
+			return;
+		}
+		
 		Interpreter i = new Interpreter();  // Construct an interpreter
 		load_data_type();
 		//Parser parser=new Parser(model.getStatement());

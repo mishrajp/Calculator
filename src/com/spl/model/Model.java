@@ -16,8 +16,10 @@ public class Model implements IModel{
 
 	
 	public void deleteLastSymbol() {
-		statement=statement.substring(0, statement.length()-1);
-		notifyAllObservers(STATEMENT);
+		if(statement.length() > 0) {
+			statement=statement.substring(0, statement.length()-1);
+			notifyAllObservers(STATEMENT);
+		}
 	}
 
 	
