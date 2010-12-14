@@ -55,7 +55,7 @@ public class Parser {
 					//now check if the next operator is from the same category
 					if(isArithmetic(tokens[i+2]) && marker[i+2] == false) {
 						//in this case read both numbers and operator and skip to the next operator						
-						if(marker[i-1] == false) {
+						if(i > 0 && marker[i-1] == false) {
 							final_expression += tokens[i-1];
 							marker[i-1] = true;							
 						}
@@ -64,7 +64,7 @@ public class Parser {
 						marker[i+1] = true;
 						++i;
 					} else { //if not - add the number and the first operator only
-						if(marker[i-1] == false) {
+						if(i > 0 && marker[i-1] == false) {
 							final_expression += tokens[i-1];
 							marker[i-1] = true;							
 						}
